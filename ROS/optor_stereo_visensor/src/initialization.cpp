@@ -16,8 +16,11 @@ vector<double> responseRecovery(vector<cv::Mat> &imgs, vector<double> &deltaT, d
     int col = imgs[0].cols;
     int numOfPixels = row * col;
     int n = 256;
-    cv::Mat A = cv::Mat::zeros(numOfImgs * numOfPixels + n + 1, n + numOfPixels, CV_64FC1);
+    cout << "Calculating the matrixs" << endl;
+    cv::Mat A = cv::Mat::zeros(numOfImgs * numOfPixels + n + 1, n + numOfPixels, CV_8SC1);
+    cout << "A matrix done..." << endl;
     cv::Mat b = cv::Mat::zeros(numOfImgs * numOfPixels + n + 1, 1, CV_64FC1);
+    cout << "b matrix done..." << endl;
 
     //include the data fitting equations
     int k = 0;

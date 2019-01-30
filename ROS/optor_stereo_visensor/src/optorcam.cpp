@@ -133,11 +133,13 @@ int visensor_get_imudata_from_timestamp(visensor_imudata* imudata, double timest
 
 int visensor_img_width()
 {
-    return (visensor_resolution_status==1?IMG_WIDTH_WVGA:IMG_WIDTH_VGA);
+    //return (visensor_resolution_status==1?IMG_WIDTH_WVGA:IMG_WIDTH_VGA);
+    return 160;
 }
 int visensor_img_height()
 {
-    return (visensor_resolution_status==1?IMG_HEIGHT_WVGA:IMG_HEIGHT_VGA);
+    //return (visensor_resolution_status==1?IMG_HEIGHT_WVGA:IMG_HEIGHT_VGA);
+    return 120;
 }
 
 bool visensor_is_leftcam_open()

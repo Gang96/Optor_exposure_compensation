@@ -56,6 +56,7 @@ void StereoVisensorCam::img_data_stream()
   //如果相机打开成功，创建图片Mat,获取硬件帧率设置为图像发布频率
   ros::Rate loop_rate(visensor_get_hardware_fps());
   std::cout << "fps is: " << visensor_get_hardware_fps() << std::endl;
+  std::cout << "分辨率为： " << visensor_img_width() << " * " << visensor_img_height() << std::endl;
 
   sensor_msgs::ImagePtr msg_l, msg_r;
   ros::Time msg_time;
@@ -63,16 +64,18 @@ void StereoVisensorCam::img_data_stream()
   visensor_imudata img_imudata;
   int i = 500;
   int man_exp = 100;
-  int imgnum = 0;
+  int imgnum = 1;
   vector<double> g;
   vector<cv::Mat> imagv;
   vector<double> deltaT;
 
   //曝光初始化
-  cout << "exposure initialzing..."<<endl;
-  while (cam_n.ok()&&imgnum<5)
+  cout << "======================================" << endl;
+  cout << "exposure initialzing..." << endl;
+  while (cam_n.ok() && imgnum < 2)
   {
     //逐帧调整
+    cout << "get the image NO." << imgnum << " ...." << endl;
     camera_i2c_write(2, 0x0B, man_exp); //Exposure Time
     
     if (visensor_is_leftcam_open())
@@ -117,11 +120,12 @@ void StereoVisensorCam::img_data_stream()
     loop_rate.sleep(); 
   }
   //得到响应函数
-  g = responseRecovery(imagv, deltaT, 0.5);
+  cout << "calculating the response function..." << endl;
+  //g = responseRecovery(imagv, deltaT, 0.5);
   cout << "exposure initialization done!" << endl;
   while (cam_n.ok())
   {
-    man_exp = exposureCalculation(man_exp, img_right_ , 1.0 , g);
+    //man_exp = exposureCalculation(man_exp, img_right_ , 1.0 , g);
     camera_i2c_write(2, 0x0B, man_exp); //Exposure Time
     
     if (visensor_is_leftcam_open())
