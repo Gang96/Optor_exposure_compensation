@@ -76,7 +76,7 @@ void StereoVisensorCam::img_data_stream()
   {
     //逐帧调整
     cout << "get the image NO." << imgnum << " ...." << endl;
-    camera_i2c_write(2, 0x0B, man_exp); //Exposure Time
+    camera_i2c_write(2, 0x0B, man_exp); //人工调整Exposure Time
     
     if (visensor_is_leftcam_open())
     {
@@ -112,8 +112,8 @@ void StereoVisensorCam::img_data_stream()
     pub_caml_.publish(msg_l);
     pub_camr_.publish(msg_r);
     //存储初始化向量
-    imagv.push_back(img_right_);
-    deltaT.push_back(man_exp);
+    imagv.push_back(img_right_);//存储图片
+    deltaT.push_back(man_exp);//存储曝光时间 
     ++imgnum;
     ++man_exp;
     
@@ -121,11 +121,11 @@ void StereoVisensorCam::img_data_stream()
   }
   //得到响应函数
   cout << "calculating the response function..." << endl;
-  //g = responseRecovery(imagv, deltaT, 0.5);
+  g = responseRecovery(imagv, deltaT, 0.5);
   cout << "exposure initialization done!" << endl;
   while (cam_n.ok())
   {
-    //man_exp = exposureCalculation(man_exp, img_right_ , 1.0 , g);
+    man_exp = exposureCalculation(man_exp, img_right_ , 1.0 , g);
     camera_i2c_write(2, 0x0B, man_exp); //Exposure Time
     
     if (visensor_is_leftcam_open())

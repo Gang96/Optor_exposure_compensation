@@ -1,3 +1,5 @@
+//初始化程序：文献参考——HDR文献第13篇参考文献
+//通过对一系列的图片和每个图片对应的曝光时间进行处理得到曝光响应函数
 #include "optor_stereo_visensor_ros/stereo_visensor_cam.h"
 
 
@@ -17,7 +19,7 @@ vector<double> responseRecovery(vector<cv::Mat> &imgs, vector<double> &deltaT, d
     int numOfPixels = row * col;
     int n = 256;
     cout << "Calculating the matrixs" << endl;
-    cv::Mat A = cv::Mat::zeros(numOfImgs * numOfPixels + n + 1, n + numOfPixels, CV_8SC1);
+    cv::Mat A = cv::Mat::zeros(numOfImgs * numOfPixels + n + 1, n + numOfPixels, CV_8SC1);//内存溢出，修改重点
     cout << "A matrix done..." << endl;
     cv::Mat b = cv::Mat::zeros(numOfImgs * numOfPixels + n + 1, 1, CV_64FC1);
     cout << "b matrix done..." << endl;
@@ -58,6 +60,7 @@ vector<double> responseRecovery(vector<cv::Mat> &imgs, vector<double> &deltaT, d
     cv::multiply(invA, b, x);
 
     //fit g with a tenth order polynomial
+    //运用多项式去拟合响应函数g，详见fit类的定义
     Fit fit;
     vector<double> X;
     vector<double> Y;
@@ -66,7 +69,7 @@ vector<double> responseRecovery(vector<cv::Mat> &imgs, vector<double> &deltaT, d
         X.push_back(i);
         Y.push_back(*x.ptr<double>(i));
     }
-    fit.polyfit(X, Y, 10);
+    fit.polyfit(X, Y, 10);//拟合阶数为10
     vector<double> g;
     fit.getFactor(g);
     return g;
